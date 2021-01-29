@@ -7,12 +7,6 @@ export const onCreateTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -24,12 +18,6 @@ export const onUpdateTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -41,42 +29,6 @@ export const onDeleteTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateDesignation = /* GraphQL */ `
-  subscription OnCreateDesignation {
-    onCreateDesignation {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateDesignation = /* GraphQL */ `
-  subscription OnUpdateDesignation {
-    onUpdateDesignation {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteDesignation = /* GraphQL */ `
-  subscription OnDeleteDesignation {
-    onDeleteDesignation {
-      id
-      name
       createdAt
       updatedAt
     }
