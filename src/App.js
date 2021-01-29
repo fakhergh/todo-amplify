@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { API, graphqlOperation } from "aws-amplify";
+import React, { useCallback, useRef } from "react";
 import { withAuthenticator } from "@aws-amplify/ui-react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 import { createTodo, deleteTodo } from "./graphql/mutations";
 import { listTodos } from "./graphql/queries";
-
-const initialState = { name: "", description: "" };
+import graphqlClient from "./graphqlClient";
+import { TodoForm, TodoList } from "./views";
 
 const styles = {
   container: {
@@ -16,104 +16,80 @@ const styles = {
     justifyContent: "center",
     padding: 20,
   },
-  todo: { marginBottom: 15 },
-  input: {
-    border: "none",
-    backgroundColor: "#ddd",
-    marginBottom: 10,
-    padding: 8,
-    fontSize: 18,
-  },
-  todoName: { fontSize: 20, fontWeight: "bold" },
-  todoDescription: { marginBottom: 0 },
-  button: {
-    backgroundColor: "black",
-    color: "white",
-    outline: "none",
-    fontSize: 18,
-    padding: "12px 0px",
-  },
 };
 
 const App = function () {
-  const [formState, setFormState] = useState(initialState);
-  const [todos, setTodos] = useState([]);
+  const formikRef = useRef(null);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    fetchTodos();
-  }, []);
+  const { status, data, error } = useQuery("todos", () =>
+    graphqlClient.request(listTodos)
+  );
 
-  function setInput(key, value) {
-    setFormState({ ...formState, [key]: value });
+  const { mutate: addTodoMutation } = useMutation(
+    async ({ variables }) => graphqlClient.request(createTodo, variables),
+    {
+      onSuccess: (data) => {
+        queryClient.setQueryData("todos", (old) => {
+          const newData = JSON.parse(JSON.stringify(old));
+          newData.listTodos.items.unshift(data.createTodo);
+          return newData;
+        });
+      },
+    }
+  );
+
+  const { mutate: removeTodoMutation } = useMutation(
+    async ({ variables }) => graphqlClient.request(deleteTodo, variables),
+    {
+      onSuccess: (data) => {
+        queryClient.setQueryData("todos", (old) => {
+          const newData = JSON.parse(JSON.stringify(old));
+
+          newData.listTodos.items = newData.listTodos.items.filter(
+            (todo) => todo.id != data.deleteTodo.id
+          );
+          return newData;
+        });
+      },
+    }
+  );
+
+  const onSubmit = useCallback(
+    (values) => {
+      addTodoMutation({ variables: { input: values } });
+      formikRef.current.resetForm();
+    },
+    [formikRef, addTodoMutation]
+  );
+
+  const onItemDeleteClicked = useCallback(
+    (id) => {
+      removeTodoMutation({ variables: { input: { id } } });
+    },
+    [removeTodoMutation]
+  );
+
+  if (!!error) {
+    return <p>Error</p>;
   }
 
-  async function fetchTodos() {
-    try {
-      const todoData = await API.graphql(graphqlOperation(listTodos));
-      const todos = todoData.data.listTodos.items;
-      setTodos(todos);
-    } catch (err) {
-      console.log("error fetching todos");
-    }
-  }
-
-  async function addTodo() {
-    try {
-      if (!formState.name || !formState.description) return;
-      const todo = { ...formState };
-      setFormState(initialState);
-      const { data } = await API.graphql(
-        graphqlOperation(createTodo, { input: todo })
-      );
-      setTodos([...todos, data.createTodo]);
-    } catch (err) {
-      console.log("error creating todo:", err);
-    }
-  }
-
-  async function removeTodo(id) {
-    try {
-      const { data } = await API.graphql(
-        graphqlOperation(deleteTodo, { input: { id } })
-      );
-
-      setTodos(todos.filter((todo) => todo.id !== data.deleteTodo.id));
-    } catch (err) {
-      console.log("error creating todo:", err);
-    }
+  if (status === "loading") {
+    return <p>Loading</p>;
   }
 
   return (
     <div style={styles.container}>
       <h2>Amplify Todos</h2>
-      <input
-        onChange={(event) => setInput("name", event.target.value)}
-        style={styles.input}
-        value={formState.name}
-        placeholder="Name"
+      <TodoForm
+        ref={formikRef}
+        onSubmit={onSubmit}
+        submitButtonText="Create Todo"
       />
-      <input
-        onChange={(event) => setInput("description", event.target.value)}
-        style={styles.input}
-        value={formState.description}
-        placeholder="Description"
+      <TodoList
+        items={data?.listTodos.items || []}
+        onItemDeleteClicked={onItemDeleteClicked}
       />
-      <button style={styles.button} onClick={addTodo}>
-        Create Todo
-      </button>
-      {todos.map((todo, index) => (
-        <div key={todo.id ? todo.id : index} style={styles.todo}>
-          <p style={styles.todoName}>{todo.name}</p>
-          <p style={styles.todoDescription}>{todo.description}</p>
-          <button
-            onClick={() => {
-              removeTodo(todo.id);
-            }}
-          >
-            Delete
-          </button>
-        </div>
-      ))}
     </div>
   );
 };
