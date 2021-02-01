@@ -1,39 +1,40 @@
 import React, { useCallback } from "react";
+import { Button, List, Tooltip } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
-const styles = {
-  todo: {
-    marginBottom: 15,
-  },
-  todoName: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  todoDescription: {
-    marginBottom: 0,
-  },
-};
-
-const TodoItem = function ({ item, onDelete }) {
+const DeleteIcon = ({ id, onDelete }) => {
   const onDeleteClick = useCallback(() => {
-    typeof onDelete === "function" && onDelete(item.id);
-  }, [onDelete, item.id]);
+    typeof onDelete === "function" && onDelete(id);
+  }, [onDelete, id]);
 
   return (
-    <div style={styles.todo}>
-      <p style={styles.todoName}>{item.name}</p>
-      <p style={styles.todoDescription}>{item.description}</p>
-      <button onClick={onDeleteClick}>Delete</button>
-    </div>
+    <Tooltip title="Delete">
+      <Button
+        type="default"
+        shape="circle"
+        onClick={onDeleteClick}
+        icon={<DeleteOutlined />}
+      />
+    </Tooltip>
   );
 };
 
-const TodoList = function ({ items = [], onItemDeleteClicked }) {
+const TodoList = function({ items = [], onItemDeleteClicked }) {
   return (
-    <>
-      {items.map((todo) => (
-        <TodoItem key={todo.id} item={todo} onDelete={onItemDeleteClicked} />
-      ))}
-    </>
+    <List
+      itemLayout="horizontal"
+      dataSource={items}
+      renderItem={item => (
+        <List.Item
+          actions={[<DeleteIcon id={item.id} onDelete={onItemDeleteClicked} />]}
+        >
+          <List.Item.Meta
+            title={<span>{item.name}</span>}
+            description={item.description}
+          />
+        </List.Item>
+      )}
+    />
   );
 };
 
