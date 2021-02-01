@@ -1,5 +1,6 @@
 import React, { useCallback, useRef } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Auth } from "aws-amplify";
 
 import { createTodo, deleteTodo } from "../graphql/mutations";
 import { listTodos } from "../graphql/queries";
@@ -17,7 +18,7 @@ const styles = {
   },
 };
 
-const Todo = function () {
+const Todo = function ({ history }) {
   const formikRef = useRef(null);
   const queryClient = useQueryClient();
 
@@ -80,6 +81,17 @@ const Todo = function () {
   return (
     <div style={styles.container}>
       <h2>Amplify Todos</h2>
+      <button
+        onClick={() => {
+          Auth.signOut()
+            .then(() => {
+              history.push("/auth");
+            })
+            .catch(console.log);
+        }}
+      >
+        Sign out
+      </button>
       <TodoForm
         ref={formikRef}
         onSubmit={onSubmit}
