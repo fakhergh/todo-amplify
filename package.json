@@ -8,11 +8,14 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "aws-amplify": "^3.3.14",
+    "aws-amplify-react": "^4.2.19",
     "formik": "^2.2.6",
     "graphql-request": "^3.4.0",
+    "history": "4.0.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-query": "^3.6.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
     "web-vitals": "^0.2.4",
     "yup": "^0.32.8"
@@ -41,5 +44,7 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/react-router-dom": "^5.1.7"
+  }
 }
