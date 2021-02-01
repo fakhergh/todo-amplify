@@ -4,11 +4,11 @@ import Amplify from "aws-amplify";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import awsExports from "./aws-exports";
+Amplify.configure(awsExports);
+
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-
-Amplify.configure(awsExports);
 
 const queryClient = new QueryClient();
 
