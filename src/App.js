@@ -5,19 +5,15 @@ import { Auth, Todo } from "./pages";
 import history from "./history";
 
 const App = function () {
-  return <Auth />;
-};
-
-/*
- return (
+  return (
     <Router history={history}>
       <Switch>
-        <Route exact="/" component={Todo} />
+        <Route exact path="/" component={Todo} />
         <Route path="/auth" component={Auth} />
         <Redirect to="/" />
       </Switch>
     </Router>
   );
- */
+};
 
 export default App;
