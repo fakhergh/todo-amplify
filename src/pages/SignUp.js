@@ -4,32 +4,33 @@ import { Auth } from "aws-amplify";
 
 import { RegisterForm } from "../views";
 import { AuthState } from "../constants";
+import { Button, Layout } from "antd";
 
 const styles = {
   signUpButton: {
     backgroundColor: "transparent",
-    borderWidth: 0,
-  },
+    borderWidth: 0
+  }
 };
 
 class SignUp extends BaseSignUp {
-  onSubmit = (values) => {
+  onSubmit = values => {
     const data = {
       username: values.username,
       password: values.password,
       attributes: {
         email: values.email,
-        phone_number: values.phoneNumber,
-      },
+        phone_number: values.phoneNumber
+      }
     };
 
     Auth.signUp(data)
-      .then((signUpData) => {
+      .then(signUpData => {
         this.props.onStateChange(AuthState.CONFIRM_SIGN_UP, {
-          username: signUpData.user.getUsername(),
+          username: signUpData.user.getUsername()
         });
       })
-      .catch((error) => {
+      .catch(error => {
         alert("Sign Up Error");
         console.log("SignIn error: ", error);
       });
@@ -43,20 +44,26 @@ class SignUp extends BaseSignUp {
     if (this.props.authState !== AuthState.SIGN_UP) {
       return null;
     }
+    const { Header, Footer, Content } = Layout;
 
     return (
-      <div>
-        <h1>Sign Up</h1>
-        <RegisterForm onSubmit={this.onSubmit} />
-
-        <button
-          style={styles.signUpButton}
-          type="button"
-          onClick={this.showSignIn}
-        >
-          Back to login
-        </button>
-      </div>
+      <Layout style={{ padding: 30 }}>
+        <Header style={{ backgroundColor: "white" }}>
+          Please register to use the app
+        </Header>
+        <Content>
+          <RegisterForm onSubmit={this.onSubmit} />
+        </Content>
+        <Footer>
+          <Button
+            style={styles.signUpButton}
+            type="button"
+            onClick={this.showSignIn}
+          >
+            Back to login
+          </Button>
+        </Footer>
+      </Layout>
     );
   }
 }

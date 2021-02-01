@@ -4,17 +4,18 @@ import { Auth } from "aws-amplify";
 
 import { LoginForm } from "../views";
 import { AuthState } from "../constants";
+import { Layout, Button } from "antd";
 
 const styles = {
   button: {
     backgroundColor: "transparent",
-    borderWidth: 0,
-  },
+    borderWidth: 0
+  }
 };
 
 class SignIn extends BaseSignIn {
-  onSubmit = (values) => {
-    Auth.signIn(values).catch((error) => {
+  onSubmit = values => {
+    Auth.signIn(values).catch(error => {
       alert("Sign In Error");
       console.log("SignIn error: ", error);
     });
@@ -32,26 +33,36 @@ class SignIn extends BaseSignIn {
     if (this.props.authState !== AuthState.SIGN_IN) {
       return null;
     }
-
+    const { Header, Footer, Content } = Layout;
     return (
-      <div>
-        <h1>Sign In</h1>
-        <LoginForm onSubmit={this.onSubmit} />
-        <button style={styles.button} type="button" onClick={this.showSignUp}>
-          Don't have account? Sign up
-        </button>
-        <button
-          style={styles.button}
-          type="button"
-          onClick={this.showForgotPassword}
-        >
-          Forgot password?
-        </button>
+      <Layout style={{ padding: 30 }}>
+        <Header style={{ backgroundColor: "white" }}>
+          Please login to use the app
+        </Header>
+        <Content>
+          <LoginForm onSubmit={this.onSubmit} />
+        </Content>
+        <Footer>
+          <Button
+            style={styles.signUpButton}
+            type="button"
+            onClick={this.showSignUp}
+          >
+            Don't have account? Sign up
+          </Button>
+          <button
+            style={styles.button}
+            type="button"
+            onClick={this.showForgotPassword}
+          >
+            Forgot password?
+          </button>
 
-        {!!this.props.authData?.message && (
-          <p style={{ color: "green" }}>{this.props.authData?.message}</p>
-        )}
-      </div>
+          {!!this.props.authData?.message && (
+            <p style={{ color: "green" }}>{this.props.authData?.message}</p>
+          )}
+        </Footer>
+      </Layout>
     );
   }
 }
