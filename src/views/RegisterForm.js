@@ -8,6 +8,7 @@ const initialValues = {
   username: "",
   email: "",
   password: "",
+  confirmPassword: "",
   phoneNumber: "",
 };
 
@@ -15,6 +16,9 @@ const validationSchema = Yup.object().shape({
   username: Yup.string().required(),
   email: Yup.string().email().required(),
   password: Yup.string().required(),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Password not matches")
+    .required(),
   phoneNumber: Yup.string().required(),
 });
 
@@ -32,6 +36,11 @@ const RegisterForm = function ({ onSubmit }) {
           name="password"
           type="password"
           placeholder="Password"
+        />
+        <TextInputField
+          name="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
         />
         <TextInputField name="phoneNumber" placeholder="Phone Number" />
         <button type="submit">Register</button>
