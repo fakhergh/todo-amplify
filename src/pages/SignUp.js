@@ -3,6 +3,7 @@ import { SignUp as BaseSignUp } from "aws-amplify-react";
 import { Auth } from "aws-amplify";
 
 import { RegisterForm } from "../views";
+import { AuthState } from "../constants";
 
 const styles = {
   signUpButton: {
@@ -24,7 +25,9 @@ class SignUp extends BaseSignUp {
 
     Auth.signUp(data)
       .then((signUpData) => {
-        console.log("signUpData: ", signUpData);
+        this.props.onStateChange(AuthState.CONFIRM_SIGN_UP, {
+          username: signUpData.user.getUsername(),
+        });
       })
       .catch((error) => {
         alert("Sign Up Error");
@@ -33,16 +36,17 @@ class SignUp extends BaseSignUp {
   };
 
   showSignIn = () => {
-    this.props.onStateChange("signIn");
+    this.props.onStateChange(AuthState.SIGN_IN);
   };
 
   render() {
-    if (this.props.authState !== "signUp") {
+    if (this.props.authState !== AuthState.SIGN_UP) {
       return null;
     }
 
     return (
       <div>
+        <h1>Sign Up</h1>
         <RegisterForm onSubmit={this.onSubmit} />
 
         <button
