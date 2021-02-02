@@ -3,16 +3,18 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import { TextInputField } from "../components";
+import { Button, Typography } from "antd";
 
 const initialValues = {
-  code: "",
+  code: ""
 };
 
 const validationSchema = Yup.object().shape({
-  code: Yup.string().required(),
+  code: Yup.string().required()
 });
 
-const ConfirmSignUpForm = function ({ username, onSubmit }) {
+const ConfirmSignUpForm = function({ username, onSubmit }) {
+  const { Paragraph } = Typography;
   return (
     <Formik
       initialValues={initialValues}
@@ -20,9 +22,9 @@ const ConfirmSignUpForm = function ({ username, onSubmit }) {
       onSubmit={onSubmit}
     >
       <Form>
-        <p>Username: {username}</p>
+        <Paragraph>Username: {username}</Paragraph>
         <TextInputField name="code" placeholder="Verification Code" />
-        <button type="submit">Confirm</button>
+        <Button htmlType="submit">Confirm</Button>
       </Form>
     </Formik>
   );

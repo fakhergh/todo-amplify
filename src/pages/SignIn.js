@@ -1,10 +1,10 @@
 import React from "react";
 import { SignIn as BaseSignIn } from "aws-amplify-react";
 import { Auth } from "aws-amplify";
+import { Layout, Button, Typography } from "antd";
 
 import { LoginForm } from "../views";
 import { AuthState } from "../constants";
-import { Layout, Button } from "antd";
 
 const styles = {
   button: {
@@ -34,6 +34,7 @@ class SignIn extends BaseSignIn {
       return null;
     }
     const { Header, Footer, Content } = Layout;
+    const { Paragraph } = Typography;
     return (
       <Layout style={{ padding: 30 }}>
         <Header style={{ backgroundColor: "white" }}>
@@ -50,16 +51,14 @@ class SignIn extends BaseSignIn {
           >
             Don't have account? Sign up
           </Button>
-          <button
-            style={styles.button}
-            type="button"
-            onClick={this.showForgotPassword}
-          >
+          <Button type="text" onClick={this.showForgotPassword}>
             Forgot password?
-          </button>
+          </Button>
 
           {!!this.props.authData?.message && (
-            <p style={{ color: "green" }}>{this.props.authData?.message}</p>
+            <Paragraph style={{ color: "green" }}>
+              {this.props.authData?.message}
+            </Paragraph>
           )}
         </Footer>
       </Layout>
