@@ -7,12 +7,6 @@ export const getTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -29,39 +23,6 @@ export const listTodos = /* GraphQL */ `
         id
         name
         description
-        designation {
-          id
-          name
-          createdAt
-          updatedAt
-        }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getDesignation = /* GraphQL */ `
-  query GetDesignation($id: ID!) {
-    getDesignation(id: $id) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listDesignations = /* GraphQL */ `
-  query ListDesignations(
-    $filter: ModelDesignationFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listDesignations(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        name
         createdAt
         updatedAt
       }

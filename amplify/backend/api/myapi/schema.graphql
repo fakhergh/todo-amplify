@@ -2,10 +2,4 @@ type Todo @model {
   id: ID!
   name: String!
   description: String
-  designation: Designation @connection
-}
-
-type Designation @model {
-  id: ID!
-  name: String!
 }

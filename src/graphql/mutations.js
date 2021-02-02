@@ -10,12 +10,6 @@ export const createTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -30,12 +24,6 @@ export const updateTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
       createdAt
       updatedAt
     }
@@ -50,51 +38,6 @@ export const deleteTodo = /* GraphQL */ `
       id
       name
       description
-      designation {
-        id
-        name
-        createdAt
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createDesignation = /* GraphQL */ `
-  mutation CreateDesignation(
-    $input: CreateDesignationInput!
-    $condition: ModelDesignationConditionInput
-  ) {
-    createDesignation(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateDesignation = /* GraphQL */ `
-  mutation UpdateDesignation(
-    $input: UpdateDesignationInput!
-    $condition: ModelDesignationConditionInput
-  ) {
-    updateDesignation(input: $input, condition: $condition) {
-      id
-      name
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteDesignation = /* GraphQL */ `
-  mutation DeleteDesignation(
-    $input: DeleteDesignationInput!
-    $condition: ModelDesignationConditionInput
-  ) {
-    deleteDesignation(input: $input, condition: $condition) {
-      id
-      name
       createdAt
       updatedAt
     }
