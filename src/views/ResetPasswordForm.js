@@ -27,9 +27,14 @@ const ResetPasswordForm = function ({ onSubmit }) {
     >
       <Form>
         <TextInputField name="code" placeholder="Code" />
-        <TextInputField name="password" placeholder="New Password" />
+        <TextInputField
+          name="password"
+          type="password"
+          placeholder="New Password"
+        />
         <TextInputField
           name="confirmPassword"
+          type="password"
           placeholder="Confirm New Password"
         />
         <button type="submit">Submit</button>
