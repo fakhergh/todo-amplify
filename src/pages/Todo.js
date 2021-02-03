@@ -1,11 +1,8 @@
 import React, { useCallback, useRef } from "react";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Auth } from "aws-amplify";
 
-import { createTodo, deleteTodo } from "../graphql/mutations";
-import { listTodos } from "../graphql/queries";
-import graphqlClient from "../graphqlClient";
 import { TodoForm, TodoList } from "../views";
+import { useCreateTodo, useDeleteTodo, useTodos } from "../hooks";
 
 const styles = {
   container: {
@@ -20,40 +17,12 @@ const styles = {
 
 const Todo = function ({ history }) {
   const formikRef = useRef(null);
-  const queryClient = useQueryClient();
 
-  const { status, data, error } = useQuery("todos", () =>
-    graphqlClient.request(listTodos)
-  );
+  const { status, data, error } = useTodos();
 
-  const { mutate: addTodoMutation } = useMutation(
-    async ({ variables }) => graphqlClient.request(createTodo, variables),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData("todos", (old) => {
-          const newData = JSON.parse(JSON.stringify(old));
-          newData.listTodos.items.unshift(data.createTodo);
-          return newData;
-        });
-      },
-    }
-  );
+  const { mutate: addTodoMutation } = useCreateTodo();
 
-  const { mutate: removeTodoMutation } = useMutation(
-    async ({ variables }) => graphqlClient.request(deleteTodo, variables),
-    {
-      onSuccess: (data) => {
-        queryClient.setQueryData("todos", (old) => {
-          const newData = JSON.parse(JSON.stringify(old));
-
-          newData.listTodos.items = newData.listTodos.items.filter(
-            (todo) => todo.id !== data.deleteTodo.id
-          );
-          return newData;
-        });
-      },
-    }
-  );
+  const { mutate: removeTodoMutation } = useDeleteTodo();
 
   const onSubmit = useCallback(
     (values) => {
@@ -98,7 +67,7 @@ const Todo = function ({ history }) {
         submitButtonText="Create Todo"
       />
       <TodoList
-        items={data?.listTodos.items || []}
+        items={data.data?.listTodos.items || []}
         onItemDeleteClicked={onItemDeleteClicked}
       />
     </div>
