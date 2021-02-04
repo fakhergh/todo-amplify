@@ -4,15 +4,16 @@ import { RequireNewPassword } from "aws-amplify-react";
 
 import ResetPasswordForm from "../views/ResetPasswordForm";
 import { AuthState } from "../constants";
+import { Layout, Typography } from "antd";
 
 class ResetPassword extends RequireNewPassword {
-  onSubmit = (values) => {
+  onSubmit = values => {
     const { username } = this.props.authData;
 
     Auth.forgotPasswordSubmit(username, values.code, values.password)
       .then(() =>
         this.props.onStateChange(AuthState.SIGN_IN, {
-          message: "Your password is changed",
+          message: "Your password is changed"
         })
       )
       .catch(console.log);
@@ -20,12 +21,13 @@ class ResetPassword extends RequireNewPassword {
 
   render() {
     if (this.props.authState !== AuthState.RESET_PASSWORD) return null;
+    const { Title } = Typography;
 
     return (
-      <div>
-        <h1>Reset Password</h1>
+      <Layout style={{ padding: 30 }}>
+        <Title>Reset Password</Title>
         <ResetPasswordForm onSubmit={this.onSubmit} />
-      </div>
+      </Layout>
     );
   }
 }

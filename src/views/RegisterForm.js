@@ -3,26 +3,29 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import { TextInputField } from "../components";
+import { Button } from "antd";
 
 const initialValues = {
   username: "",
   email: "",
   password: "",
   confirmPassword: "",
-  phoneNumber: "",
+  phoneNumber: ""
 };
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required(),
-  email: Yup.string().email().required(),
+  email: Yup.string()
+    .email()
+    .required(),
   password: Yup.string().required(),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password")], "Password not matches")
     .required(),
-  phoneNumber: Yup.string().required(),
+  phoneNumber: Yup.string().required()
 });
 
-const RegisterForm = function ({ onSubmit }) {
+const RegisterForm = function({ onSubmit }) {
   return (
     <Formik
       initialValues={initialValues}
@@ -43,7 +46,9 @@ const RegisterForm = function ({ onSubmit }) {
           placeholder="Confirm Password"
         />
         <TextInputField name="phoneNumber" placeholder="Phone Number" />
-        <button type="submit">Register</button>
+        <Button htmlType="submit" type="primary">
+          Register
+        </Button>
       </Form>
     </Formik>
   );

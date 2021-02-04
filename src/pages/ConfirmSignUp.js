@@ -4,16 +4,18 @@ import { ConfirmSignUp as BaseConfirmSignUp } from "aws-amplify-react";
 
 import { ConfirmSignUpForm } from "../views";
 import { AuthState } from "../constants";
+import { Layout } from "antd";
+import Title from "antd/lib/typography/Title";
 
 class ConfirmSignUp extends BaseConfirmSignUp {
-  onSubmit = (values) => {
+  onSubmit = values => {
     Auth.confirmSignUp(this.props.authData?.username, values.code)
       .then(() => {
         this.props.onStateChange(AuthState.SIGN_IN, {
-          message: "Your account is verified",
+          message: "Your account is verified"
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
         alert("Confirm Sign Up failed");
       });
@@ -23,13 +25,13 @@ class ConfirmSignUp extends BaseConfirmSignUp {
     if (this.props.authState !== AuthState.CONFIRM_SIGN_UP) return null;
 
     return (
-      <div>
-        <h1>Confirm Sign Up</h1>
+      <Layout style={{ padding: 30 }}>
+        <Title>Confirm Sign Up</Title>
         <ConfirmSignUpForm
           username={this.props.authData?.username}
           onSubmit={this.onSubmit}
         />
-      </div>
+      </Layout>
     );
   }
 }

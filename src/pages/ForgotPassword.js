@@ -4,14 +4,15 @@ import { ForgotPassword as BaseForgotPassword } from "aws-amplify-react";
 
 import { ForgotPasswordForm } from "../views";
 import { AuthState } from "../constants";
+import { Layout, Button, Typography } from "antd";
 
 class ForgotPassword extends BaseForgotPassword {
-  onSubmit = (values) => {
+  onSubmit = values => {
     Auth.forgotPassword(values.username)
       .then(() => {
         this.props.onStateChange(AuthState.RESET_PASSWORD, values);
       })
-      .catch((error) => {
+      .catch(error => {
         console.log(error);
         alert("Sending code fail");
       });
@@ -23,13 +24,13 @@ class ForgotPassword extends BaseForgotPassword {
 
   render() {
     if (this.props.authState !== AuthState.FORGOT_PASSWORD) return null;
-
+    const { Title } = Typography;
     return (
-      <div>
-        <h1>Reset Password</h1>
+      <Layout style={{ padding: 30 }}>
+        <Title>Reset Password</Title>
         <ForgotPasswordForm onSubmit={this.onSubmit} />
-        <button onClick={this.showSignIn}>Back to Sign In</button>
-      </div>
+        <Button onClick={this.showSignIn}>Back to Sign In</Button>
+      </Layout>
     );
   }
 }
